@@ -1,0 +1,52 @@
+﻿@{
+    ViewBag.Title = "Home Page";
+}
+
+@model Caso4.Models.Objetos.AbonoObj
+
+<div>
+    <h1 class="text-center">Registro</h1>
+    <hr />
+    @if (ViewBag.Cobros != null)
+    {
+        <div style="display: flex; justify-content: space-around; margin-top: 20px;">
+            <h2>Compra</h2>
+            <div style="display: flex; flex-direction: column; margin-left: 30px;">
+                @foreach (Caso4.Models.Objetos.CobroObj cobro in ViewBag.Cobros)
+                {
+                    if (@cobro.Estado == "Cancelado")
+                    {
+                        <button disabled>@cobro.Descripcion</button>
+                    }
+                    else
+                    {
+                        <button onclick="seleccionCobro(@cobro.IdCompra, @cobro.Saldo)">@cobro.Descripcion</button>
+                    }
+                }
+            </div>
+        </div>
+        <hr />
+        <div style="margin: 20px 0;">
+            <label style="margin-right: 10px;">Saldo anterior</label>
+            <input id="saldoAnterior" value="" disabled/>
+        </div>
+        using (Html.BeginForm("Abono", "Home", FormMethod.Post))
+        {
+            @Html.HiddenFor(model => model.IdCompra, new { htmlAttributes = new { @class = "form-control", id = "IdCompra", required = true } })
+            <div class="mb-3 form-check">
+                <label class="form-check-label">Abono</label>
+                @Html.EditorFor(model => model.Monto, new { htmlAttributes = new { @class = "form-control", required = true } })
+            </div>
+            <button type="submit" class="btn btn-primary" style="margin-top: 10px">Abonar</button>
+        }
+    }
+</div>
+
+<script>
+    function seleccionCobro(IdCompra, saldo) {
+        idCompra = document.getElementById('IdCompra');
+        idCompra.value = IdCompra;
+        saldoAnterior = document.getElementById('saldoAnterior');
+        saldoAnterior.value = saldo;
+    }
+</script>
